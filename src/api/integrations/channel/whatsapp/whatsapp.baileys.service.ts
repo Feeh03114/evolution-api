@@ -3106,7 +3106,8 @@ export class BaileysStartupService extends ChannelStartupService {
       groups: { number: string; jid: string }[];
       broadcast: { number: string; jid: string }[];
       users: { number: string; jid: string; name?: string }[];
-    } = { groups: [], broadcast: [], users: [] };
+      newsletters: { number: string; jid: string }[];
+    } = { groups: [], broadcast: [], users: [], newsletters: [] };
 
     data.numbers.forEach((number) => {
       const jid = createJid(number);
@@ -3115,6 +3116,8 @@ export class BaileysStartupService extends ChannelStartupService {
         jids.groups.push({ number, jid });
       } else if (jid === 'status@broadcast') {
         jids.broadcast.push({ number, jid });
+      } else if (isJidNewsletter(jid)) {
+        jids.newsletters.push({ number, jid });
       } else {
         jids.users.push({ number, jid });
       }
@@ -3124,6 +3127,9 @@ export class BaileysStartupService extends ChannelStartupService {
 
     // BROADCAST
     onWhatsapp.push(...jids.broadcast.map(({ jid, number }) => new OnWhatsAppDto(jid, false, number)));
+
+    // NEWSLETTERS
+    onWhatsapp.push(...jids.newsletters.map(({ jid, number }) => new OnWhatsAppDto(jid, true, number)));
 
     // GROUPS
     const groups = await Promise.all(
@@ -3141,7 +3147,10 @@ export class BaileysStartupService extends ChannelStartupService {
 
     // USERS
     const contacts: any[] = await this.prismaRepository.contact.findMany({
-      where: { instanceId: this.instanceId, remoteJid: { in: jids.users.map(({ jid }) => jid) } },
+      where: {
+        instanceId: this.instanceId,
+        remoteJid: { in: [...jids.users.map(({ jid }) => jid), ...jids.newsletters.map(({ jid }) => jid)] },
+      },
     });
 
     // Separate @lid numbers from normal numbers
