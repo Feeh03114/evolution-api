@@ -44,7 +44,7 @@ const getTypeMessage = (msg: any) => {
         }`
       : undefined,
     externalAdReplyBody: msg?.contextInfo?.externalAdReply?.body
-      ? `externalAdReplyBody|${msg.contextInfo.externalAdReply.body}`
+      ? `externalAdReplyBody|${msg.contextInfo?.externalAdReply?.body}`
       : undefined,
   };
 
