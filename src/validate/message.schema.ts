@@ -20,7 +20,7 @@ const isNotEmpty = (...propertyNames: string[]): JSONSchema7 => {
   };
 };
 
-const numberDefinition: JSONSchema7Definition = {
+export const numberDefinition: JSONSchema7Definition = {
   type: 'string',
   description: 'Invalid format',
 };
@@ -38,7 +38,7 @@ export const templateMessageSchema: JSONSchema7 = {
   required: ['name', 'language'],
 };
 
-const quotedOptionsSchema: JSONSchema7 = {
+export const quotedOptionsSchema: JSONSchema7 = {
   properties: {
     key: {
       type: 'object',

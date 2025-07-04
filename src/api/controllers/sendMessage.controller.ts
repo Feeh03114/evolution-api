@@ -14,6 +14,10 @@ import {
   SendTemplateDto,
   SendTextDto,
 } from '@api/dto/sendMessage.dto';
+import {
+  SendNewsletterMediaDto,
+  SendNewsletterTextDto,
+} from '@api/dto/newsletter.dto';
 import { WAMonitoringService } from '@api/services/monitor.service';
 import { BadRequestException } from '@exceptions';
 import { isBase64, isURL } from 'class-validator';
@@ -101,5 +105,31 @@ export class SendMessageController {
 
   public async sendStatus({ instanceName }: InstanceDto, data: SendStatusDto, file?: any) {
     return await this.waMonitor.waInstances[instanceName].statusMessage(data, file);
+  }
+
+  public async sendNewsletterText({ instanceName }: InstanceDto, data: SendNewsletterTextDto) {
+    const message: SendTextDto = {
+      ...data,
+      number: `${data.channel}@newsletter`,
+      text: data.text,
+    } as SendTextDto;
+
+    return await this.waMonitor.waInstances[instanceName].textMessage(message);
+  }
+
+  public async sendNewsletterMedia(
+    { instanceName }: InstanceDto,
+    data: SendNewsletterMediaDto,
+    file?: any,
+  ) {
+    const message: SendMediaDto = {
+      ...data,
+      number: `${data.channel}@newsletter`,
+    } as SendMediaDto;
+
+    if (file || isURL(data.media) || isBase64(data.media)) {
+      return await this.waMonitor.waInstances[instanceName].mediaMessage(message, file);
+    }
+    throw new BadRequestException('Owned media must be a url or base64');
   }
 }
