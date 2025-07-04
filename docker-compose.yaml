@@ -1,60 +1,56 @@
+version: '3.9'
+
 services:
-  api:
+  evolution-api:
     container_name: evolution_api
-    image: evoapicloud/evolution-api:latest
+    image: atendai/evolution-api:latest
+    hostname: evo-api-app
     restart: always
-    depends_on:
-      - redis
-      - postgres
     ports:
-      - 8080:8080
+      - "8081:8081"
+    environment:
+      # Server
+      SERVER_PORT: '8081'
+      SERVER_URL: 'https://evo-api-custom.dotsaude.com.br'
+
+      # Database (ajuste o host, usuário, senha conforme necessário)
+      DATABASE_ENABLED: 'true'
+      DATABASE_PROVIDER: 'postgresql'
+      DATABASE_CONNECTION_CLIENT_NAME: 'evo_api'
+      DATABASE_SAVE_DATA_INSTANCE: 'true'
+      DATABASE_SAVE_DATA_NEW_MESSAGE: 'true'
+      DATABASE_SAVE_MESSAGE_UPDATE: 'true'
+      DATABASE_SAVE_DATA_CONTACTS: 'true'
+      DATABASE_SAVE_DATA_CHATS: 'true'
+      DATABASE_SAVE_DATA_LABELS: 'true'
+      DATABASE_SAVE_DATA_HISTORIC: 'true'
+
+      # Cache (ajuste a URI do Redis se for outro host)
+      CACHE_REDIS_ENABLED: 'true'
+      CACHE_LOCAL_ENABLED: 'false'
+      CACHE_REDIS_URI: redis://n8n-redis:6379/2
+
+      # Auth
+      AUTHENTICATION_API_KEY: '643b9dff-3757-454f-ab34-62b43ba9eca5'
+      AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES: 'true'
+
+      # WebSocket e Logs
+      WEBSOCKET_ENABLED: 'true'
+      WEBHOOK_GLOBAL_ENABLED: 'true'
+      CONFIG_SESSION_PHONE_VERSION: '2.3000.1023506640'
+      LOG_LEVEL: 'ERROR,WARN,DEBUG,INFO,LOG,VERBOSE,DARK,WEBHOOKS'
+      LOG_COLOR: 'true'
+      LOG_BAILEYS: 'info'
+
     volumes:
       - evolution_instances:/evolution/instances
     networks:
-      - evolution-net
-    env_file:
-      - .env
-    expose:
-      - 8080
-
-  redis:
-    image: redis:latest
-    networks:
-      - evolution-net
-    container_name: redis
-    command: >
-      redis-server --port 6379 --appendonly yes
-    volumes:
-      - evolution_redis:/data
-    ports:
-      - 6379:6379
-
-  postgres:
-    container_name: postgres
-    image: postgres:15
-    networks:
-      - evolution-net
-    command: ["postgres", "-c", "max_connections=1000", "-c", "listen_addresses=*"]
-    restart: always
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=evolution
-      - POSTGRES_HOST_AUTH_METHOD=trust
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    expose:
-      - 5432
+      - default_service
 
 volumes:
   evolution_instances:
-  evolution_redis:
-  postgres_data:
-
+    name: evolution_instances
 
 networks:
-  evolution-net:
-    name: evolution-net
-    driver: bridge
+  default_service:
+    external: true
