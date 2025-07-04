@@ -2298,7 +2298,7 @@ export class BaileysStartupService extends ChannelStartupService {
 
     return await this.sendMessageWithTyping(
       data.number,
-      { conversation: data.text },
+      isJidNewsletter(data.number) ? { text: data.text } : { conversation: data.text },
       {
         delay: data?.delay,
         presence: 'composing',
