@@ -70,6 +70,7 @@ export const textMessageSchema: JSONSchema7 = {
   type: 'object',
   properties: {
     number: { ...numberDefinition },
+    channel: { ...numberDefinition },
     text: { type: 'string' },
     linkPreview: { type: 'boolean' },
     delay: {
@@ -89,7 +90,8 @@ export const textMessageSchema: JSONSchema7 = {
       },
     },
   },
-  required: ['number', 'text'],
+  required: ['text'],
+  anyOf: [{ required: ['number'] }, { required: ['channel'] }],
 };
 
 export const mediaMessageSchema: JSONSchema7 = {
@@ -97,6 +99,7 @@ export const mediaMessageSchema: JSONSchema7 = {
   type: 'object',
   properties: {
     number: { ...numberDefinition },
+    channel: { ...numberDefinition },
     mediatype: { type: 'string', enum: ['image', 'document', 'video', 'audio'] },
     mimetype: { type: 'string' },
     media: { type: 'string' },
@@ -119,7 +122,8 @@ export const mediaMessageSchema: JSONSchema7 = {
       },
     },
   },
-  required: ['number', 'mediatype'],
+  required: ['mediatype'],
+  anyOf: [{ required: ['number'] }, { required: ['channel'] }],
 };
 
 export const ptvMessageSchema: JSONSchema7 = {

@@ -37,7 +37,8 @@ export class StatusMessage {
 }
 
 export class Metadata {
-  number: string;
+  number?: string;
+  channel?: string;
   delay?: number;
   quoted?: Quoted;
   linkPreview?: boolean;
