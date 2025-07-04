@@ -14,10 +14,6 @@ import {
   SendTemplateDto,
   SendTextDto,
 } from '@api/dto/sendMessage.dto';
-import {
-  SendNewsletterMediaDto,
-  SendNewsletterTextDto,
-} from '@api/dto/newsletter.dto';
 import { sendMessageController } from '@api/server.module';
 import {
   audioMessageSchema,
@@ -33,8 +29,6 @@ import {
   stickerMessageSchema,
   templateMessageSchema,
   textMessageSchema,
-  newsletterTextSchema,
-  newsletterMediaSchema,
 } from '@validate/validate.schema';
 import { RequestHandler, Router } from 'express';
 import multer from 'multer';
@@ -112,28 +106,6 @@ export class MessageRouter extends RouterBroker {
           schema: statusMessageSchema,
           ClassRef: SendStatusDto,
           execute: (instance) => sendMessageController.sendStatus(instance, bodyData, req.file as any),
-        });
-
-        return res.status(HttpStatus.CREATED).json(response);
-      })
-      .post(this.routerPath('sendNewsletterText'), ...guards, async (req, res) => {
-        const response = await this.dataValidate<SendNewsletterTextDto>({
-          request: req,
-          schema: newsletterTextSchema,
-          ClassRef: SendNewsletterTextDto,
-          execute: (instance, data) => sendMessageController.sendNewsletterText(instance, data),
-        });
-
-        return res.status(HttpStatus.CREATED).json(response);
-      })
-      .post(this.routerPath('sendNewsletterMedia'), ...guards, upload.single('file'), async (req, res) => {
-        const bodyData = req.body;
-
-        const response = await this.dataValidate<SendNewsletterMediaDto>({
-          request: req,
-          schema: newsletterMediaSchema,
-          ClassRef: SendNewsletterMediaDto,
-          execute: (instance) => sendMessageController.sendNewsletterMedia(instance, bodyData, req.file as any),
         });
 
         return res.status(HttpStatus.CREATED).json(response);
