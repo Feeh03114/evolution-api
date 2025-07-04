@@ -1894,6 +1894,7 @@ export class BaileysStartupService extends ChannelStartupService {
       !message['poll'] &&
       !message['sticker'] &&
       !message['conversation'] &&
+      !message['text'] &&
       sender !== 'status@broadcast'
     ) {
       if (message['reactionMessage']) {
@@ -1911,6 +1912,14 @@ export class BaileysStartupService extends ChannelStartupService {
       return await this.client.sendMessage(
         sender,
         { text: message['conversation'], mentions, linkPreview: linkPreview } as unknown as AnyMessageContent,
+        option as unknown as MiscMessageGenerationOptions,
+      );
+    }
+
+    if (message['text']) {
+      return await this.client.sendMessage(
+        sender,
+        { text: message['text'], mentions, linkPreview: linkPreview } as unknown as AnyMessageContent,
         option as unknown as MiscMessageGenerationOptions,
       );
     }
@@ -2296,9 +2305,12 @@ export class BaileysStartupService extends ChannelStartupService {
       throw new BadRequestException('Text is required');
     }
 
+    const jid = createJid(data.number);
+    const message = jid.includes('@newsletter') ? { text: data.text } : { conversation: data.text };
+
     return await this.sendMessageWithTyping(
       data.number,
-      { conversation: data.text },
+      message,
       {
         delay: data?.delay,
         presence: 'composing',
