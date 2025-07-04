@@ -6,11 +6,11 @@ export const newsletterTextSchema: JSONSchema7 = {
   $id: v4(),
   type: 'object',
   properties: {
-    channel: { ...numberDefinition },
+    channel: { ...(numberDefinition as any) },
     text: { type: 'string' },
     linkPreview: { type: 'boolean' },
     delay: { type: 'integer', description: 'Enter a value in milliseconds' },
-    quoted: { ...quotedOptionsSchema },
+    quoted: { ...(quotedOptionsSchema as any) },
     everyOne: { type: 'boolean', enum: [true, false] },
     mentioned: {
       type: 'array',
@@ -30,14 +30,14 @@ export const newsletterMediaSchema: JSONSchema7 = {
   $id: v4(),
   type: 'object',
   properties: {
-    channel: { ...numberDefinition },
+    channel: { ...(numberDefinition as any) },
     mediatype: { type: 'string', enum: ['image', 'document', 'video', 'audio', 'ptv'] },
     mimetype: { type: 'string' },
     media: { type: 'string' },
     fileName: { type: 'string' },
     caption: { type: 'string' },
     delay: { type: 'integer', description: 'Enter a value in milliseconds' },
-    quoted: { ...quotedOptionsSchema },
+    quoted: { ...(quotedOptionsSchema as any) },
     everyOne: { type: 'boolean', enum: [true, false] },
     mentioned: {
       type: 'array',
