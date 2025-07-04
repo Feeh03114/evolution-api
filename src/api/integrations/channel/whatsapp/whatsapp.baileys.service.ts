@@ -2270,9 +2270,6 @@ export class BaileysStartupService extends ChannelStartupService {
 
   // Send Message Controller
   public async textMessage(data: SendTextDto, isIntegration = false) {
-    if (!data.number && (data as any).channel) {
-      data.number = `${(data as any).channel}@newsletter`;
-    }
     const text = data.text;
 
     if (!text || text.trim().length === 0) {
@@ -2582,9 +2579,6 @@ export class BaileysStartupService extends ChannelStartupService {
   }
 
   public async mediaMessage(data: SendMediaDto, file?: any, isIntegration = false) {
-    if (!data.number && (data as any).channel) {
-      data.number = `${(data as any).channel}@newsletter`;
-    }
     const mediaData: SendMediaDto = { ...data };
 
     if (file) mediaData.media = file.buffer.toString('base64');

@@ -34,16 +34,10 @@ export class SendMessageController {
   }
 
   public async sendText({ instanceName }: InstanceDto, data: SendTextDto) {
-    if (!data.number && data.channel) {
-      data.number = `${data.channel}@newsletter`;
-    }
     return await this.waMonitor.waInstances[instanceName].textMessage(data);
   }
 
   public async sendMedia({ instanceName }: InstanceDto, data: SendMediaDto, file?: any) {
-    if (!data.number && data.channel) {
-      data.number = `${data.channel}@newsletter`;
-    }
     if (isBase64(data?.media) && !data?.fileName && data?.mediatype === 'document') {
       throw new BadRequestException('For base64 the file name must be informed.');
     }
