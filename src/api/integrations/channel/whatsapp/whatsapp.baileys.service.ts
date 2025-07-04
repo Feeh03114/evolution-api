@@ -1695,6 +1695,26 @@ export class BaileysStartupService extends ChannelStartupService {
           this.contactHandle['contacts.update'](payload);
         }
 
+        if (events['newsletter.reaction']) {
+          const payload = events['newsletter.reaction'];
+          this.sendDataWebhook(Events.NEWSLETTER_REACTION, payload);
+        }
+
+        if (events['newsletter.view']) {
+          const payload = events['newsletter.view'];
+          this.sendDataWebhook(Events.NEWSLETTER_VIEW, payload);
+        }
+
+        if (events['newsletter-participants.update']) {
+          const payload = events['newsletter-participants.update'];
+          this.sendDataWebhook(Events.NEWSLETTER_PARTICIPANTS_UPDATE, payload);
+        }
+
+        if (events['newsletter-settings.update']) {
+          const payload = events['newsletter-settings.update'];
+          this.sendDataWebhook(Events.NEWSLETTER_SETTINGS_UPDATE, payload);
+        }
+
         if (events[Events.LABELS_ASSOCIATION]) {
           const payload = events[Events.LABELS_ASSOCIATION];
           this.labelHandle[Events.LABELS_ASSOCIATION](payload, database);
