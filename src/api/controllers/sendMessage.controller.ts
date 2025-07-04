@@ -102,5 +102,4 @@ export class SendMessageController {
   public async sendStatus({ instanceName }: InstanceDto, data: SendStatusDto, file?: any) {
     return await this.waMonitor.waInstances[instanceName].statusMessage(data, file);
   }
-
 }
