@@ -1889,6 +1889,13 @@ export class BaileysStartupService extends ChannelStartupService {
       return m;
     }
 
+    if(isJidNewsletter(sender)){
+      return await this.client.sendMessage(
+        sender,
+        message
+      );
+    }
+
     if (
       !message['audio'] &&
       !message['poll'] &&
@@ -2096,7 +2103,8 @@ export class BaileysStartupService extends ChannelStartupService {
           group?.ephemeralDuration,
           // group?.participants,
         );
-      } else {
+      } 
+      else {
         messageSent = await this.sendMessage(sender, message, mentions, linkPreview, quoted);
       }
 
